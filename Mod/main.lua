@@ -25,8 +25,18 @@ Offline:Property({'Name', 'Offline', 'GetName', 'SetName', { auto = true }})
 Offline:Property({'Desc', '', 'GetDesc', 'SetDesc', { auto = true }})
 Offline.version = '0.0.1'
 
-function Offline:init()
+function Offline:init(refresh)
+    if not self.instance or refresh then
+        self.instance = self:new()
+    end
 
+    return self.instance
 end
+
+function Offline:GetInstance()
+    return self.instance
+end
+
+
 
 
