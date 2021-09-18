@@ -12,5 +12,13 @@ local AccountManager = NPL.load('(gl)Mod/Offline/AccountManager.lua')
 local AccountManager = NPL.export()
 
 function AccountManager:ShowActivationPage()
-
+    Mod.WorldShare.Utils.ShowWindow(
+        0,
+        0,
+        'Mod/OfflineMod/ActivationPage.html',
+        'Mod.OfflineMod.ActivationPage',
+        0,
+        0,
+        '_fi'
+    )
 end

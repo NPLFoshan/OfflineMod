@@ -19,24 +19,15 @@ CODE GUIDELINE
 
 ]]
 
+local AccountManager = NPL.load('./AccountManager.lua')
+
 local Offline = commonlib.inherit(commonlib.gettable('Mod.ModBase'), commonlib.gettable('Mod.Offline'))
+
+Offline.AccountManager = AccountManager
 
 Offline:Property({'Name', 'Offline', 'GetName', 'SetName', { auto = true }})
 Offline:Property({'Desc', '', 'GetDesc', 'SetDesc', { auto = true }})
 Offline.version = '0.0.1'
 
-function Offline:init(refresh)
-    if not self.instance or refresh then
-        self.instance = self:new()
-    end
-
-    return self.instance
+function Offline:init()
 end
-
-function Offline:GetInstance()
-    return self.instance
-end
-
-
-
-

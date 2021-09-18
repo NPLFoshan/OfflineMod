@@ -1,0 +1,211 @@
+<html>
+    <body>
+        <pe:mcml>
+            <script type="text/npl">
+                <![CDATA[
+                    -- UI
+                    local ActivationManager = NPL.load('./AccountManager.lua')
+                    local Create = NPL.load('(gl)Mod/WorldShare/cellar/Create/Create.lua')
+
+                    -- service
+                    local KeepworkServiceSession = NPL.load('(gl)Mod/WorldShare/service/KeepworkService/Session.lua')
+
+                    local page = document:GetPageCtrl()
+                    
+                    function close()
+                        page:CloseWindow()
+                    end
+
+                    function open_vip()
+                        GameLogic.IsVip("RedSummerCampWorks", true, function(result)
+                            if result then
+                            end
+                        end)
+                    end
+
+                    function activate()
+                        -- login
+                        local account = page:GetValue('account')
+                        local password = page:GetValue('password')
+                        local code = page:GetValue('code')
+
+                        KeepworkServiceSession:Login(account, password, function(response, err)
+                            if err ~= 200 or not response then
+                                return
+                            end
+
+                            echo('activate code now!!!!!!', true)
+                        end)
+
+                        if true then
+                            return
+                        end
+
+                        local not_bind_node = page:FindControl('not_bind')
+                        local binded = page:FindControl('binded')
+
+                        not_bind_node.visible = false
+                        binded.visible = true
+                    end
+
+                    function open_create()
+                        close()
+                        Create:Show()
+                    end
+
+                    function start()
+
+                    end
+
+                    function sync_class_world()
+
+                    end
+
+                    function unbind()
+
+                    end
+                ]]>
+            </script>
+            <style type='type/mcss' src='Mod/WorldShare/cellar/Opus/OpusMcss.mcss'></style>
+            <style type='type/mcss' src='Mod/WorldShare/cellar/Theme/Mcss/Theme1.mcss'></style>
+            <pe:container
+                alignment='_fi'
+                zorder='-1'
+                width='100%'
+                height='100%'
+                style='position:relative;background-color:#dcdcdc'>
+            </pe:container>
+            <pe:container
+                alignment='_fi'
+                zorder='-1'
+                width='100%'
+                height='100%'
+                class='red_summer_camp_bg'>
+            </pe:container>
+            <div>
+                <div style='height: 56px;'>
+                    <div align='right'
+                        style='width: 67px;
+                                height: 70px;
+                                position: relative;
+                                margin-right: 20px;
+                                margin-top: 8px;'>
+                        <div onclick='open_vip'
+                            style='background: url(Texture/Aries/Creator/keepwork/RedSummerCamp/works/works_32bits.png#304 111 67 70);
+                                    width: 67px;
+                                    height: 70px;'></div>
+                    </div>
+                    <div style='background: url(Texture/Aries/Creator/keepwork/RedSummerCamp/courses/courses_32bits.png#7 249 169 56);
+                                width: 169px;
+                                height: 56px;
+                                float: left;'>
+                        <div align='center'
+                            onclick='close'
+                            style='background: url(Texture/Aries/Creator/keepwork/RedSummerCamp/works/works_32bits.png#5 67 38 33);
+                                    width: 38px;
+                                    height: 33px;
+                                    margin-top: 12px;
+                                    margin-left: -20px;'></div>
+                    </div>
+                    <div style='float: left;
+                                width: 283px;
+                                height: 56px;
+                                margin-left: -73px;
+                                background: url(Texture/Aries/Creator/keepwork/RedSummerCamp/shentongbei/shentongbei_32bits.png#17 794 283 56)'>
+                        <div align='center'
+                            style='background:;
+                                    color: #FFFFFF;
+                                    font-size: 20px;
+                                    base-font-size: 30px;
+                                    font-weight: bolder;
+                                    width: 85px;
+                                    height: 20px;
+                                    margin-top: 15px;
+                                    float: left;'>
+                            <%= L'推荐列表' %>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <pe:container alignment='_ct'
+                                  name='not_bind'
+                                  visible='true'
+                                  width='400px'
+                                  height='300px'
+                                  style='background-color: #FF0000;
+                                         margin-left: -200px;
+                                         margin-top: -206px;'>
+                        <div>
+                            <%= L'本地模式' %>
+                        </div>
+                        <div>
+                            <%= L'请联网激活本地模式使用的账号，每个账号可激活2个设备' %>
+                        </div>
+                        <div>
+                            <div>
+                                <%= L'*账号：' %>
+                                <input type='text'
+                                       name='account'
+                                       value='' />
+                            </div>
+                            <div>
+                                <%= L'*密码' %>
+                                <input type='text'
+                                       PasswordChar='*'
+                                       name='password'
+                                       value='' />
+                            </div>
+                            <div>
+                                <%= L'激活码' %>
+                                <input type='text'
+                                       name='code'
+                                       value='' />
+                            </div>
+                        </div>
+                        <div>
+                            <input type='button'
+                                   onclick='open_create'
+                                   value='<%= L"不使用账号" %>' />
+                            <input type='button'
+                                   onclick='activate'
+                                   value='<%= L"激活" %>'/>
+                        </div>
+                    </pe:container>
+                    <pe:container alignment='_ct'
+                                  name='binded'
+                                  visible='false'
+                                  width='400px'
+                                  height='300px'
+                                  style='background-color: #0000FF;
+                                         margin-left: -200px;
+                                         margin-top: -206px;'>
+                        <div>
+                            <%= L'本地模式' %>
+                        </div>
+                        <div>
+                            onedou
+                        </div>
+                        <div>
+                            <div style='float: left;'
+                                 onclick='sync_class_world'>
+                                <%= '同步离线课程' %>
+                            </div>
+                            <div style='float: left;'
+                                 onclick='unbind'>
+                                <%= L'解除激活（需联网）' %>
+                            </div>
+                        </div>
+                        <div>
+                            <input type='button'
+                                   onclick='open_create'
+                                   value='<%= L"不使用账号" %>' />
+                            <input type='button'
+                                   onclick='start'
+                                   value='<%= L"开始" %>' />
+                        </div>
+                    </pe:container>
+                </div>
+            </div>
+        </pe:mcml>
+    </body>
+</html>
