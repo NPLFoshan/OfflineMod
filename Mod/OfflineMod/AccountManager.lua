@@ -1,7 +1,7 @@
 --[[
 Title: Account Manager
-Author(s):  Big
-Date: 2021.09.08
+Author(s): big
+CreateDate: 2021.09.08
 Desc: 
 use the lib:
 ------------------------------------------------------------
@@ -12,7 +12,7 @@ local AccountManager = NPL.load('(gl)Mod/Offline/AccountManager.lua')
 local AccountManager = NPL.export()
 
 function AccountManager:ShowActivationPage()
-    Mod.WorldShare.Utils.ShowWindow(
+    local params = Mod.WorldShare.Utils.ShowWindow(
         0,
         0,
         'Mod/OfflineMod/ActivationPage.html',
@@ -21,4 +21,6 @@ function AccountManager:ShowActivationPage()
         0,
         '_fi'
     )
+
+    -- TODO: // get bind status
 end

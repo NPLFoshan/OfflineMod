@@ -30,9 +30,9 @@ function UserMacBindsApi:BindMacAddress(macAddress, uuid, success, error)
        type(uuid) ~= 'string' then
         return
     end
-    
+
     local params = {
-        macAddress = macAddress,
+        macAddr = macAddress,
         uuid = uuid
     }
 

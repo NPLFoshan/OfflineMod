@@ -9,6 +9,7 @@
 
                     -- service
                     local KeepworkServiceSession = NPL.load('(gl)Mod/WorldShare/service/KeepworkService/Session.lua')
+                    local UserMacBindsService = NPL.load('./service/UserMacBindsService.lua')
 
                     local page = document:GetPageCtrl()
                     
@@ -27,25 +28,29 @@
                         -- login
                         local account = page:GetValue('account')
                         local password = page:GetValue('password')
-                        local code = page:GetValue('code')
 
-                        KeepworkServiceSession:Login(account, password, function(response, err)
-                            if err ~= 200 or not response then
-                                return
+                        KeepworkServiceSession:LoginDirectly(
+                            account,
+                            password,
+                            function(bSuccessed, reason)
+                                if not bSuccessed then
+                                    GameLogic.AddBBS(nil, reason, 3000, '255 0 0')
+                                    return
+                                end
+
+                                UserMacBindsService:BindDevice(function(bSuccessed)
+                                    if not bSuccessed then
+                                        return
+                                    end
+
+                                    local not_bind_node = page:FindControl('not_bind')
+                                    local binded = page:FindControl('binded')
+
+                                    not_bind_node.visible = false
+                                    binded.visible = true
+                                end)
                             end
-
-                            echo('activate code now!!!!!!', true)
-                        end)
-
-                        if true then
-                            return
-                        end
-
-                        local not_bind_node = page:FindControl('not_bind')
-                        local binded = page:FindControl('binded')
-
-                        not_bind_node.visible = false
-                        binded.visible = true
+                        )
                     end
 
                     function open_create()
@@ -84,17 +89,6 @@
             </pe:container>
             <div>
                 <div style='height: 56px;'>
-                    <div align='right'
-                        style='width: 67px;
-                                height: 70px;
-                                position: relative;
-                                margin-right: 20px;
-                                margin-top: 8px;'>
-                        <div onclick='open_vip'
-                            style='background: url(Texture/Aries/Creator/keepwork/RedSummerCamp/works/works_32bits.png#304 111 67 70);
-                                    width: 67px;
-                                    height: 70px;'></div>
-                    </div>
                     <div style='background: url(Texture/Aries/Creator/keepwork/RedSummerCamp/courses/courses_32bits.png#7 249 169 56);
                                 width: 169px;
                                 height: 56px;
