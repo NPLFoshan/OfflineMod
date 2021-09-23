@@ -20,7 +20,7 @@
                     end
 
                     function get_offline_username()
-                        UserMacBindsService:GetUsername()
+                        return UserMacBindsService:GetUsername()
                     end
 
                     function set_container(index)
@@ -52,6 +52,7 @@
 
                                 UserMacBindsService:BindDevice(function(bSucceed)
                                     if not bSucceed then
+                                        _guihelper.MessageBox(L'激活失败。该账号已激活2台设备，请解除之前的设置激活后再试。')
                                         return
                                     end
 
@@ -161,7 +162,7 @@
                                   name='not_bind'
                                   visible='false'
                                   width='700px'
-                                  height='300px'
+                                  height='400px'
                                   style='background:;
                                          margin-left: -350px;
                                          margin-top: -206px;'>
@@ -234,33 +235,58 @@
                     <pe:container alignment='_ct'
                                   name='binded'
                                   visible='false'
-                                  width='400px'
-                                  height='300px'
-                                  style='background-color: #0000FF;
-                                         margin-left: -200px;
+                                  width='700px'
+                                  height='400px'
+                                  style='background:;
+                                         margin-left: -350px;
                                          margin-top: -206px;'>
-                        <div>
-                            <%= L'本地模式' %>
-                        </div>
-                        <div>
+                        <div style='font-size: 55px;
+                                    base-font-size: 55px;
+                                    font-weight: bold;
+                                    text-align: center;'>
                             <%= get_offline_username() %>
                         </div>
-                        <div>
+                        <div style='font-size: 25px;
+                                    base-font-size: 25px;
+                                    color: #2956ab;
+                                    width: 500px;
+                                    margin-top: 80px;'
+                              align='center'>
                             <div style='float: left;'
                                  onclick='sync_class_world'>
                                 <%= '同步离线课程' %>
+                                <div width='155px'
+                                     style='background-color: #2956ab;
+                                            height: 1px;'></div>
                             </div>
-                            <div style='float: left;'
+                            <div style='float: left;
+                                        margin-left: 120px;'
                                  onclick='unbind'>
                                 <%= L'解除激活（需联网）' %>
+                                <div width='225px'
+                                     style='background-color: #2956ab;
+                                            height: 1px;'></div>
                             </div>
                         </div>
-                        <div>
+                        <div width='430px'
+                             align='center'
+                             style='margin-top: 80px;'>
                             <input type='button'
+                                   class='theme1_gray2_button'
+                                   style='width: 200px;
+                                          height: 57px;
+                                          font-size: 25px;
+                                          base-font-size: 25px;'
                                    onclick='open_create'
                                    value='<%= L"不使用账号" %>' />
                             <input type='button'
                                    onclick='start'
+                                   class='theme1_yellow_button'
+                                   style='width: 150px;
+                                          height: 55px;
+                                          margin-left: 80px;
+                                          font-size: 25px;
+                                          base-font-size: 25px;'
                                    value='<%= L"开始" %>' />
                         </div>
                     </pe:container>
