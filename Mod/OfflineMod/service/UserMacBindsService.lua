@@ -78,7 +78,15 @@ function UserMacBindsService:UnbindDevice(callback)
 
         for _, item in ipairs(data) do
             if item.macAddr == macAddress then
-                UserMacBindsApi:RemoveMacAddress(item.id) 
+                UserMacBindsApi:RemoveMacAddress(item.id)
+
+                BindDatabase:SetValue('username', nil)
+                BindDatabase:SetValue('UUID', nil)
+                BindDatabase:SetValue('machineID', nil)
+                BindDatabase:SetValue('bindDate', nil)
+                BindDatabase:SetValue('isBind', nil)
+
+                BindDatabase:SaveDatabase()
 
                 callback(true)
                 return
