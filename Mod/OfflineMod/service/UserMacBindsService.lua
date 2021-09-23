@@ -12,7 +12,8 @@ local UserMacBindsService = NPL.load('(gl)Mod/service/UserMacBindsService.lua')
 -- api
 local UserMacBindsApi = NPL.load('(gl)Mod/OfflineMod/api/Keepwork/UserMacBindsApi.lua')
 
-
+-- database
+local BindDatabase = NPL.load('../database/BindDatabase.lua')
 
 local UserMacBindsService = NPL.export()
 
@@ -30,7 +31,15 @@ function UserMacBindsService:BindDevice(callback)
     end
 
     local function RecordToLocal()
-        -- TODO: // set machine ID and UUID
+        local username = Mod.WorldShare.Store:Get('user/username')
+
+        BindDatabase:SetValue('username', username)
+        BindDatabase:SetValue('UUID', self:GetUUID())
+        BindDatabase:SetValue('machineID', self:GetMachineID())
+        BindDatabase:SetValue('bindDate', Mod.WorldShare.Utils:TimestampToDatetime(Mod.WorldShare.Utils:GetCurrentTime(true)))
+        BindDatabase:SetValue('isBind', true)
+
+        BindDatabase:SaveDatabase()
     end
 
     self:IsBindDevice(function(bExist)
@@ -48,7 +57,6 @@ function UserMacBindsService:BindDevice(callback)
                     else
                         callback(false)
                     end
-                    echo(data, true)
                 end
             )
         end
@@ -95,10 +103,6 @@ function UserMacBindsService:IsBindDevice(callback)
         local macAddress = self:GetMachineID()
         local UUID = self:GetUUID()
 
-        echo(data, true)
-        echo(macAddress, true)
-        echo(UUID, true)
-
         for _, item in ipairs(data) do
             if item.macAddress == macAddress and
                item.uuid == UUID then
@@ -109,4 +113,18 @@ function UserMacBindsService:IsBindDevice(callback)
 
         callback(false)
     end)
+end
+
+function UserMacBindsService:IsBindDeviceFromLocal()
+    local isBind = BindDatabase:GetValue('isBind')
+
+    if isBind == true then
+        return true
+    else
+        return false
+    end
+end
+
+function UserMacBindsService:GetUsername()
+    return BindDatabase:GetValue('username')
 end

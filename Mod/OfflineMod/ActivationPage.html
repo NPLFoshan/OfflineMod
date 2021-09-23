@@ -3,10 +3,11 @@
         <pe:mcml>
             <script type="text/npl">
                 <![CDATA[
-                    -- UI
+                    -- bottles
                     local ActivationManager = NPL.load('./AccountManager.lua')
                     local Create = NPL.load('(gl)Mod/WorldShare/cellar/Create/Create.lua')
                     local LoginModal = NPL.load('(gl)Mod/WorldShare/cellar/LoginModal/LoginModal.lua')
+                    local RedSummerCampMainPage = NPL.load('(gl)script/apps/Aries/Creator/Game/Tasks/RedSummerCamp/RedSummerCampMainPage.lua')
 
                     -- service
                     local KeepworkServiceSession = NPL.load('(gl)Mod/WorldShare/service/KeepworkService/Session.lua')
@@ -16,6 +17,10 @@
                     
                     function close()
                         page:CloseWindow()
+                    end
+
+                    function get_offline_username()
+                        UserMacBindsService:GetUsername()
                     end
 
                     function set_container(index)
@@ -51,6 +56,8 @@
                                     end
 
                                     set_container(2)
+
+                                    KeepworkServiceSession:Logout()
                                 end)
                             end
                         )
@@ -62,11 +69,11 @@
                     end
 
                     function start()
-
+                        RedSummerCampMainPage.Show()
                     end
 
                     function sync_class_world()
-
+                        -- loadworld -d
                     end
 
                     function unbind()
@@ -78,10 +85,20 @@
                                     end
 
                                     set_container(1)
+                                    
+                                    KeepworkServiceSession:Logout()
                                 end)
                             end
                         end)
                     end
+
+                    Mod.WorldShare.Utils.SetTimeOut(function()
+                        if UserMacBindsService:IsBindDeviceFromLocal() then
+                            set_container(2)
+                        else
+                            set_container(1)
+                        end
+                    end, 0)
                 ]]>
             </script>
             <style type='type/mcss' src='Mod/WorldShare/cellar/Opus/OpusMcss.mcss'></style>
@@ -129,7 +146,7 @@
                                     height: 20px;
                                     margin-top: 15px;
                                     float: left;'>
-                            <%= L'推荐列表' %>
+                            <%= L'本地模式' %>
                         </div>
                     </div>
                 </div>
@@ -174,7 +191,7 @@
                     </pe:container>
                     <pe:container alignment='_ct'
                                   name='binded'
-                                  visible='true'
+                                  visible='false'
                                   width='400px'
                                   height='300px'
                                   style='background-color: #0000FF;
@@ -184,7 +201,7 @@
                             <%= L'本地模式' %>
                         </div>
                         <div>
-                            onedou
+                            <%= get_offline_username() %>
                         </div>
                         <div>
                             <div style='float: left;'
