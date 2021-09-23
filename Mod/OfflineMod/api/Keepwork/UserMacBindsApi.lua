@@ -19,7 +19,7 @@ local UserMacBindsApi = NPL.export()
 -- method: POST
 -- params:
 --[[
-    macAddress string necessary
+    macAddr string necessary
     uuid string necessary
 ]]
 -- return: object

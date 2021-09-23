@@ -6,6 +6,7 @@
                     -- UI
                     local ActivationManager = NPL.load('./AccountManager.lua')
                     local Create = NPL.load('(gl)Mod/WorldShare/cellar/Create/Create.lua')
+                    local LoginModal = NPL.load('(gl)Mod/WorldShare/cellar/LoginModal/LoginModal.lua')
 
                     -- service
                     local KeepworkServiceSession = NPL.load('(gl)Mod/WorldShare/service/KeepworkService/Session.lua')
@@ -17,11 +18,17 @@
                         page:CloseWindow()
                     end
 
-                    function open_vip()
-                        GameLogic.IsVip("RedSummerCampWorks", true, function(result)
-                            if result then
-                            end
-                        end)
+                    function set_container(index)
+                        local not_bind_node = page:FindControl('not_bind')
+                        local binded = page:FindControl('binded')
+
+                        if index == 1 then -- not bind
+                            not_bind_node.visible = true
+                            binded.visible = false
+                        elseif index == 2 then -- binded
+                            not_bind_node.visible = false
+                            binded.visible = true
+                        end
                     end
 
                     function activate()
@@ -32,22 +39,18 @@
                         KeepworkServiceSession:LoginDirectly(
                             account,
                             password,
-                            function(bSuccessed, reason)
-                                if not bSuccessed then
+                            function(bSucceed, reason)
+                                if not bSucceed then
                                     GameLogic.AddBBS(nil, reason, 3000, '255 0 0')
                                     return
                                 end
 
-                                UserMacBindsService:BindDevice(function(bSuccessed)
-                                    if not bSuccessed then
+                                UserMacBindsService:BindDevice(function(bSucceed)
+                                    if not bSucceed then
                                         return
                                     end
 
-                                    local not_bind_node = page:FindControl('not_bind')
-                                    local binded = page:FindControl('binded')
-
-                                    not_bind_node.visible = false
-                                    binded.visible = true
+                                    set_container(2)
                                 end)
                             end
                         )
@@ -67,7 +70,17 @@
                     end
 
                     function unbind()
+                        LoginModal:CheckSignedIn(L'登录后才能解绑', function(bSucceed)
+                            if bSucceed then
+                                UserMacBindsService:UnbindDevice(function(bSucceed)
+                                    if not bSucceed then
+                                        return
+                                    end
 
+                                    set_container(1)
+                                end)
+                            end
+                        end)
                     end
                 ]]>
             </script>
@@ -110,7 +123,7 @@
                             style='background:;
                                     color: #FFFFFF;
                                     font-size: 20px;
-                                    base-font-size: 30px;
+                                    base-font-size: 20px;
                                     font-weight: bolder;
                                     width: 85px;
                                     height: 20px;
@@ -123,7 +136,7 @@
                 <div>
                     <pe:container alignment='_ct'
                                   name='not_bind'
-                                  visible='true'
+                                  visible='false'
                                   width='400px'
                                   height='300px'
                                   style='background-color: #FF0000;
@@ -161,7 +174,7 @@
                     </pe:container>
                     <pe:container alignment='_ct'
                                   name='binded'
-                                  visible='false'
+                                  visible='true'
                                   width='400px'
                                   height='300px'
                                   style='background-color: #0000FF;

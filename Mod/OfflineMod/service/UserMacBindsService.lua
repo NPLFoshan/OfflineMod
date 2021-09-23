@@ -55,12 +55,30 @@ function UserMacBindsService:BindDevice(callback)
     end)
 end
 
-function UserMacBindsService:UnBindDevice(callback)
-    self:IsBindDevice(function(bExist, deviceInfo)
-        if bExist then
-            -- UserMacBindsApi:RemoveMacAddress(id)
+function UserMacBindsService:UnbindDevice(callback)
+    if not callback and type(callback) ~= 'function' then
+        return
+    end
+
+    UserMacBindsApi:GetBindList(function(data, err)
+        if err ~= 200 or
+           type(data) ~= 'table' then
+            return
+        end
+
+        local macAddress = self:GetMachineID()
+
+        for _, item in ipairs(data) do
+            if item.macAddr == macAddress then
+                UserMacBindsApi:RemoveMacAddress(item.id) 
+
+                callback(true)
+                return
+            end
         end
     end)
+
+    callback(false)
 end
 
 function UserMacBindsService:IsBindDevice(callback)
@@ -69,12 +87,17 @@ function UserMacBindsService:IsBindDevice(callback)
     end
 
     UserMacBindsApi:GetBindList(function(data, err)
-        if err ~= 200 or data ~= 'table' then
+        if err ~= 200 or
+           type(data) ~= 'table' then
             return
         end
 
         local macAddress = self:GetMachineID()
         local UUID = self:GetUUID()
+
+        echo(data, true)
+        echo(macAddress, true)
+        echo(UUID, true)
 
         for _, item in ipairs(data) do
             if item.macAddress == macAddress and
